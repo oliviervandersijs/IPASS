@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="styleLogin.css">
+    <script src="http://code.jquery.com/jquery-3.2.0.min.js"></script>
+</head>
+<body>
+    <div id="container">
+        <div id="header">
+            <h1>Login</h1>
+        </div>
+        <div id="body">
+        	<div id="error">
+        	
+        	</div>
+            <form id="Loginform">
+                <label for="Username">Gebruikersnaam: </label> 
+                <input id="naam" type="text"></input>	<br>
+                
+                
+               	<label for="Password">Wachtwoord: </label> 
+                <input id="wachtwoord" type="text"></input>				<br><br>
+                <input type="button" id="buttonLogin" value="Login"/>	<br><br>
+                <a href="htmlRegisteren.html">Nog geen account? Klik hier.</a>
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript">
+    
+  		$("#buttonLogin").click(function() {var data = {"naam": $("#naam").val(), "wachtwoord": $("#wachtwoord").val()}
+  				        
+           		$.post("/ipass/restservices/login/check", data, function(response,status) {
+      						
+      							console.log(response);
+      							console.log(response[0]);
+      							
+      							var continuething = response[0].status;
+      							console.log(continuething);
+      						
+           						if (continuething == 'LoginTrue'){
+           						window.location.href = "htmlMain.html?username="+data.naam;
+           						}
+           						
+           						if (continuething == 'LoginFalse'){
+           						document.getElementById("error").innerHTML="Geen login."; 
+           						}
+                            }, 'JSON'
+                            );
+             
+             });
+             
+             function test(data){
+             
+             }
+             
+
+             </script>
+</body>
+</html>

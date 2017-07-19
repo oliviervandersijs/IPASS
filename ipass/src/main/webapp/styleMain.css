@@ -1,0 +1,96 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    width: 60%;
+    margin: 0 auto;
+    text-align: center;
+    margin-top: 4%;
+}
+
+.repeat{
+    display: inline-block;
+}
+
+#wordSpacing{
+word-spacing: 90px;
+border: 1px solid #ccc;
+border-top: none;
+}
+.repeatDivUitgave, .repeatDivCategorie{
+    border: 1px solid #ccc;
+    border-top: none;
+}
+#uitgaveRepeatPrijs input{
+    width: 40%;
+}
+
+#uitgaveRepeatOmschrijving input{
+    width: 20em;
+}
+
+#uitgaveRepeatMenu select{
+    width: 150%;
+}
+
+#buttonOpslaan{
+    float: right;
+
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+
+button.button-add {
+    background-image: url(letter-x.png);
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: 0px 0px;
+    border: none;
+    cursor: pointer;
+    height: 16px;
+    padding-left: 16px;
+    vertical-align: middle;
+}
+
+input[type=number] {
+text-align: right;
+}
+
+.tabs {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+.tabs button{
+    background-color: inherit;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+}
+
+.tabs button:hover {
+    background-color: #ddd;
+}
+
+.tabButtonLeft {
+    float: left;
+}
+
+.tabButtonRight{
+    float: right;
+}

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Uitgave</title>
+    <link rel="stylesheet" type="text/css" href="styleMain.css">
+     <script src="http://code.jquery.com/jquery-3.2.0.min.js"></script>
+    <script src="uitgave.js"></script>
+
+</head>
+
+<body>
+
+    <div id="container">
+        <div id="header">
+            <h1>Budget</h1>
+        </div>
+        <div id="uitloggen">
+            <div class="tabs">
+                <button class="tabButtonLeft" onclick="openTab('uitgave')">Uitgave</button>
+                <button class="tabButtonLeft" onclick="openTab('categorie')">Categorie</button>
+                <button class="tabButtonLeft" onclick="openTab('overzicht')">Overzicht</button>
+                <button class="tabButtonRight">Uitloggen</button>
+            </div>
+        </div>
+
+        <div id="mainBody">
+        
+            <div id="uitgave" class="tab">
+                <div id="uitgaveObjecten">
+                    <div id="wordSpacing">
+                        Omschrijvinguitgave Datum Categorie Bedrag
+                    </div>
+                    <!-- Hier komen alle uitgave objecten. -->
+                </div>
+                <button id="buttonUitgave" onclick="addUitgaveLeeg();">Voeg nieuwe uitgave toe.</button>
+                <button id="buttonOpslaan" onclick="opslaanUitgave();">Wijzigingen opslaan.</button>
+            </div>
+            <div id="categorie" class="tab" style="display:none">
+                <div id="categorieObjecten">
+                    <div id="wordSpacing">
+                        Omschrijvingcategorie Budget
+                    </div>
+                    <!-- Hier komen alle categorie objecten. -->
+                </div>
+                <button id="buttonCategorie" onclick="addCategorie();">Voeg nieuwe categorie toe.</button> 
+                <button id="buttonOpslaan" onclick="opslaanUitgave();">Wijzigingen opslaan.</button>
+            </div>
+            <div id="overzicht" class="tab" style="display:none">
+                <div id="overzichtContainer">
+                        <table>
+                            <tr>
+                                <th>Omschrijving</th>
+                                <th>Budget</th>
+                                <th>Werkelijk</th>
+                                <th>Verschil</th>
+                                <th>Procentueel</th>
+                            </tr>
+                            <div id="overzichtObjecten">
+                            </div>
+                        </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script type="text/javascript">   	
+    	function GetName(){
+    		var sPageURL = window.location.search.substring(1);
+    		var sParameterName = sPageURL.split('=');
+    		return sParameterName;
+    	}
+    	
+    	
+    	
+   		function addUitgaveLeeg() {
+   				$.get("/ipass/restservices/main/categorie/USER1", function(dataCategorien, status){
+        			console.log(dataCategorien);
+   					var categorieText = JSON.parse(dataCategorien);
+   					var categorieList = [];
+    					for (i = 0; i < categorieText.length; i++) { 						
+   							if(categorieText[i].omschrijving !== undefined){
+   								categorieList.push(categorieText[i].omschrijving);
+   							}	
+						}
+   				var uitgaveRepeatDiv =      	'<div class="repeatDivUitgave id="+counter+"><form id=uitgaveForm>';
+          			uitgaveRepeatDiv +=         '<div id="uitgaveRepeatButton" class="repeat"><button type="button" class="button-add"></button></div>';
+            		uitgaveRepeatDiv +=         '<div id="uitgaveRepeatOmschrijving" class="repeat"><input id="omschrijving" type="text" name="Omschrijving" ></div>';
+            		uitgaveRepeatDiv +=         '<div id="uitgaveRepeatDatum" class="repeat"><input id="date" type="date" name="date" style="border:none" value = ></div>';
+            		uitgaveRepeatDiv +=         '<div id="uitgaveRepeatMenu" class="repeat"><select id="uitgaveRepeatSelect"><option value="blank"></option>'	
+            		for (i = 0; i < categorieList.length; i++) {
+							var value =  categorieList[i];
+					uitgaveRepeatDiv +='<option value="' + value + '">"'+value+'"</option>'
+   					}	
+   					uitgaveRepeatDiv += 		'</select></div>';
+            		uitgaveRepeatDiv +=         '<div id="uitgaveRepeatPrijs" class="repeat"><input id="Prijs" name="Prijs"></div></form></div>';
+   				 document.getElementById('uitgaveObjecten').insertAdjacentHTML('beforeend', uitgaveRepeatDiv);
+		});
+		}
+		function opslaanUitgave() {
+			var objtemp = new Object();
+			var data = [];
+			var omsvalues = [];
+			var datevalues = [];
+			var selectvalues = [];
+			var prijsvalues = [];
+			
+				$('input[name=Omschrijving]').each(function(){omsvalues.push($(this).val())});
+				
+				$('input[name=date]').each(function(){datevalues.push($(this).val())});
+				
+				$('select[name=uitgaveRepeatSelect]').each(function(){console.log($(this).val())});
+				
+				$('input[name=Prijs]').each(function(){prijsvalues.push($(this).val())});
+   					 
+		
+			for (i = 0; i < omsvalues.length; i++) { 		
+				 objtemp.omschrijving = omsvalues[i];
+				 objtemp.date = datevalues[i];
+				 objtemp.prijs = prijsvalues[i];
+				 data.push(objtemp);
+                }      
+           console.log(data);
+           var data2 = {"naam": data}
+           console.log(data2);
+            $.post("/ipass/restservices/main/opslaan", data, function(response,status) {
+                  			console.log(response);
+                  			console.log(status);
+                      }, 'JSON');
+             };
+             
+			
+		
+		
+    
+   		 window.onload = function() {
+   		 	var uitgavestring = "/ipass/restservices/main/uitgave/" + GetName()[1];
+   		 	var categoriestring = "/ipass/restservices/main/categorie/" + GetName()[1];
+   		 	
+   		 	
+    		$.get(uitgavestring, function(dataUitgave, status){
+        		console.log(dataUitgave);
+  
+    		$.get(categoriestring, function(dataCategorien, status){
+        		console.log(dataCategorien);
+    					
+    					var uitgaveText = JSON.parse(dataUitgave);
+    					var categorieText = JSON.parse(dataCategorien);
+    					
+    					var categorieList = [];
+    					for (i = 0; i < categorieText.length; i++) { 						
+   							if(categorieText[i].omschrijving !== undefined){
+   								categorieList.push(categorieText[i].omschrijving);
+   							}	
+						}
+				
+					
+        			if(uitgaveText[0] !== undefined){		
+						for (t = 0; t < uitgaveText.length; t++) {
+        					var omschrijving = uitgaveText[t].omschrijving;
+        					var datum = uitgaveText[t].datum;
+        					var prijs = uitgaveText[t].prijs;
+        					var categorie = uitgaveText[t].categorie;
+        					
+						
+        			var uitgaveRepeatDiv = 			'<div class="repeatDivUitgave id="+counter+"><form id=uitgaveForm>';
+						uitgaveRepeatDiv +=         '<div id="uitgaveRepeatButton" class="repeat"><button type="button" class="button-add"></button></div>';
+						uitgaveRepeatDiv +=         '<div id="uitgaveRepeatOmschrijving" class="repeat"><input id="omschrijving" type="text" name="Omschrijving" value = "'+omschrijving+'"></div>';
+						uitgaveRepeatDiv +=         '<div id="uitgaveRepeatDatum" class="repeat"><input id="date" type="date" name="date" style="border:none" value = '+datum+'></div>';
+						uitgaveRepeatDiv +=			'<div id="uitgaveRepeatMenu" class="repeat"><select id="uitgaveRepeatSelect"><option value="blank"></option>'
+											
+						for (i = 0; i < categorieList.length; i++) {
+							var value =  categorieList[i];
+							uitgaveRepeatDiv +='<option value="' + value + '">"'+value+'"</option>'
+   						}	
+						
+						uitgaveRepeatDiv +=			'</select></div>'
+						uitgaveRepeatDiv +=         '<div id="uitgaveRepeatPrijs" class="repeat"><input id="Prijs" name="Prijs"value = "'+prijs+'" ></div></form></div>';
+        			
+        				document.getElementById('uitgaveObjecten').insertAdjacentHTML('beforeend', uitgaveRepeatDiv);
+        				}
+        				}
+        				if(categorieText[0] !== undefined){		
+							for (a = 0; a < categorieText.length; a++) {
+        					var omschrijving = categorieText[a].omschrijving;
+        					var budget = categorieText[a].budget;
+        					console.log(budget);
+        				
+        				var categorieRepeatDiv = 			'<div class="repeatDivCategorie">';
+							categorieRepeatDiv +=         '<div id="uitgaveRepeatButton" class="repeat"><button type="button" class="button-add"></button></div>';
+							categorieRepeatDiv +=         '<div id="uitgaveRepeatOmschrijving" class="repeat"><input id="omschrijving" type="text" name="Omschrijving" value ="'+omschrijving+'"></div>';
+							categorieRepeatDiv +=         '<div id="uitgaveRepeatBudget" class="repeat"><label for="Budget">\u20ac</label><input id="Prijs" name="Prijs"value = "'+budget+'" ></div></div>';	
+        				
+        				document.getElementById('categorieObjecten').insertAdjacentHTML('beforeend', categorieRepeatDiv);
+        				
+        				}
+        				}
+        				
+        			});
+        		});
+    		}
+    		
+    	
+    	;
+		
+    </script>
+</body>
+
+</html>

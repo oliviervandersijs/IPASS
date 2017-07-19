@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Registreren</title>
+    <link rel="stylesheet" type="text/css" href="styleLogin.css">
+     <script src="http://code.jquery.com/jquery-3.2.0.min.js"></script>
+</head>
+
+<body>
+    <div id="container">
+        <div id="header">
+            <h1>Registreren</h1>
+        </div>
+        <div id="body">
+            <form action="RegiserServlet.do" method="GET">
+                <label for="gebruikersnaam">Gebruikersnaam: </label>
+                <input type="text" name="gebruikersnaam"><br>
+
+                <label for="wachtwoord">Wachtwoord: </label>
+                <input type="password" name="wachtwoord"><br>
+
+                <label for="wachtwoord2">Wachtwoord herhaling: </label>
+                <input type="password" name="wachtwoord2"><br>
+
+                <label for="email">E-Mail: </label>
+                <input type="text" name="email"><br>
+
+                <label for="inkomen">Maandinkomen: </label>
+                <input type="number" name="inkomen"><br><br>
+
+                <button type="button" onclick="location.href = 'index.html'">Annuleren</button>
+                <button type="submit">Registeren</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
